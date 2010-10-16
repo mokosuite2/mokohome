@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
     ecore_x_window_geometry_get(roots[0], &x, &y, &w, &h);
     g_free(roots);
 
+    elm_theme_extension_add(NULL, MOKOHOME_DATADIR "/theme.edj");
     elm_theme_overlay_add(NULL, "elm/scroller/base/desktop");
 
     Evas_Object* win = elm_win_add(NULL, "mokohome", ELM_WIN_DESKTOP);
