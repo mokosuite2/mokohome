@@ -61,12 +61,6 @@ int main(int argc, char* argv[])
     EINA_LOG_INFO("%s version %s", PACKAGE_NAME, VERSION);
     elm_init(argc, argv);
 
-    /* GLib integration */
-    if (!ecore_main_loop_glib_integrate()) {
-        EINA_LOG_ERR("Ecore/GLib integration failed!");
-        return EXIT_FAILURE;
-    }
-
     /* other things */
     mokosuite_utils_init();
     config_init(SYSCONFDIR "/" PACKAGE);

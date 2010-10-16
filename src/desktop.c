@@ -343,19 +343,5 @@ Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
 
     desktop_scroller = scroller;
 
-    #if 0
-    struct widget_press_data* cb_data = g_new0(struct widget_press_data, 1);
-    cb_data->scroller = scroller;
-    cb_data->widgets = widgets[0];
-
-    g_timeout_add(LONG_PRESS_TIME * 2, _widget_pressed, cb_data);
-
-    cb_data = g_new0(struct widget_press_data, 1);
-    cb_data->scroller = scroller;
-    cb_data->widgets = widgets[0];
-
-    g_timeout_add(LONG_PRESS_TIME * 10, _widget_pressed, cb_data);
-    #endif
-
     return bx;
 }

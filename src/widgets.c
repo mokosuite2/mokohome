@@ -24,7 +24,7 @@ static void launcher_clicked(void *data, Evas *e, Evas_Object *obj, void *event_
         g_error_free(err);
 }
 
-static gboolean _pressing(gpointer data)
+static Eina_Bool _pressing(void* data)
 {
     Evas_Object* wd = data;
     if (!evas_object_data_get(wd, "clicked")) {
@@ -42,7 +42,7 @@ static void launcher_pressed(void *data, Evas *e, Evas_Object *obj, void *event_
     if (drag_status >= 0) return;
 
     evas_object_data_set(obj, "clicked", (void*) FALSE);
-    g_timeout_add_seconds(2, _pressing, obj);
+    ecore_timer_add(2.0, _pressing, obj);
 }
 
 static void launcher_released(void *data, Evas *e, Evas_Object *obj, void *event_info)
