@@ -35,19 +35,6 @@
 #define EINA_LOG_DOMAIN_DEFAULT _log_dom
 extern int _log_dom;
 
-#ifdef TRUE
-#undef TRUE
-#endif
-
-#ifdef FALSE
-#undef FALSE
-#endif
-
-typedef Eina_Bool bool;
-
-#define TRUE    EINA_TRUE
-#define FALSE   EINA_FALSE
-
 #ifdef DEBUG
 #define LOG_LEVEL   EINA_LOG_LEVEL_DBG
 #else
