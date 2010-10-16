@@ -20,7 +20,8 @@
 
 #include <Ecore_X.h>
 #include <Elementary.h>
-#include <utils/utils.h>
+#include <mokosuite/utils/utils.h>
+#include <mokosuite/utils/cfg.h>
 #include <glib.h>
 
 #include "globals.h"

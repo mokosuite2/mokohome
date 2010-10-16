@@ -20,7 +20,7 @@
 
 #include <Elementary.h>
 #include <glib.h>
-#include <utils/cfg.h>
+#include <mokosuite/utils/cfg.h>
 
 #include "globals.h"
 #include "launchers.h"
