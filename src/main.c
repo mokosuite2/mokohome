@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 
     /* other things */
     mokosuite_utils_init();
-    config_init(SYSCONFDIR "/" PACKAGE);
+    config_init(MOKOHOME_SYSCONFDIR "/" PACKAGE ".conf");
     elm_need_efreet();
 
     EINA_LOG_DBG("Loading data from %s", MOKOHOME_DATADIR);
