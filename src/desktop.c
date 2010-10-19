@@ -20,7 +20,6 @@
 
 #include <Elementary.h>
 #include <glib.h>
-#include <mokosuite/utils/cfg.h>
 
 #include "globals.h"
 #include "desktop.h"
@@ -275,7 +274,7 @@ static void load_launchers(int desktop_id, Evas_Object* win)
     int i = 1;
     char* section = g_strdup_printf("home/%d", desktop_id + 1);
 
-    while ((entry = config_get_string(section, key, NULL))) {
+    while ((entry = remote_settings_database_GetSetting(home_settings, key, NULL))) {
         add_launcher_widget(win, desktop_id, entry);
 
         g_free(entry);

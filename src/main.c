@@ -22,7 +22,7 @@
 #include <Elementary.h>
 #include <mokosuite/utils/utils.h>
 #include <mokosuite/utils/settingsdb.h>
-#include <mokosuite/utils/cfg.h>
+#include <mokosuite/utils/dbus.h>
 #include <glib.h>
 #include <dbus/dbus-glib-bindings.h>
 
@@ -80,33 +80,13 @@ int main(int argc, char* argv[])
 
     EINA_LOG_DBG("Loading data from %s", MOKOHOME_DATADIR);
 
-    GError *e = NULL;
-    DBusGProxy *driver_proxy;
-    guint request_ret;
-
-    DBusGConnection* system_bus = dbus_g_bus_get(DBUS_BUS_SYSTEM, &e);
-    if (e) {
-        g_error("Unable to connect to system bus: %s", e->message);
-        g_error_free(e);
+    // dbus name
+    DBusGConnection* session_bus = dbus_session_bus();
+    if (!session_bus || !dbus_request_name(session_bus, MOKOHOME_NAME))
         return EXIT_FAILURE;
-    }
 
-    driver_proxy = dbus_g_proxy_new_for_name (system_bus,
-            DBUS_SERVICE_DBUS,
-            DBUS_PATH_DBUS,
-            DBUS_INTERFACE_DBUS);
-    if (!driver_proxy)
-        g_error("Unable to connect to DBus interface. Exiting.");
-
-    if (!org_freedesktop_DBus_request_name (driver_proxy,
-            MOKOHOME_NAME, 0, &request_ret, &e)) {
-        g_error("Unable to request name: %s. Exiting.", e->message);
-        g_error_free(e);
-        return EXIT_FAILURE;
-    }
-    g_object_unref(driver_proxy);
-
-    home_settings = remote_settings_database_new(system_bus,
+    // settings database
+    home_settings = remote_settings_database_new(session_bus,
         MOKOHOME_SETTINGS_PATH,
         MOKOHOME_SYSCONFDIR "/" PACKAGE ".db");
 
@@ -179,7 +159,7 @@ int main(int argc, char* argv[])
     evas_object_show(widgets);
 
     Evas_Object* bg = elm_bg_add(win);
-    char* bg_img = config_get_string("home", "wallpaper", MOKOHOME_DATADIR "/wallpaper_mountain.jpg");
+    char* bg_img = remote_settings_database_GetSetting(home_settings, "wallpaper", MOKOHOME_DATADIR "/wallpaper_mountain.jpg");
     elm_bg_file_set(bg, bg_img, NULL);
     g_free(bg_img);
 

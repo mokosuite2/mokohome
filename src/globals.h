@@ -29,6 +29,7 @@
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <mokosuite/utils/settingsdb.h>
 
 // default log domain
 #undef EINA_LOG_DOMAIN_DEFAULT
@@ -44,5 +45,7 @@ extern int _log_dom;
 #define MOKOHOME_SYSCONFDIR     SYSCONFDIR "/mokosuite"
 #define MOKOHOME_DATADIR        DATADIR "/mokosuite/home"
 #define SCALE_FACTOR            2.0
+
+extern RemoteSettingsDatabase* home_settings;
 
 #endif  /* __GLOBALS_H */
