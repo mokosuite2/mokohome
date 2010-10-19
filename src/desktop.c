@@ -21,7 +21,6 @@
 #include <Elementary.h>
 #include <glib.h>
 #include <mokosuite/utils/cfg.h>
-#include <mokosuite/utils/cfg.h>
 
 #include "globals.h"
 #include "desktop.h"

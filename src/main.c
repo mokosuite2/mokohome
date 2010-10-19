@@ -21,8 +21,10 @@
 #include <Ecore_X.h>
 #include <Elementary.h>
 #include <mokosuite/utils/utils.h>
+#include <mokosuite/utils/settingsdb.h>
 #include <mokosuite/utils/cfg.h>
 #include <glib.h>
+#include <dbus/dbus-glib-bindings.h>
 
 #include "globals.h"
 #include "launchers.h"
@@ -35,8 +37,13 @@
 #define BG_WIDTH        853
 #endif
 
+#define MOKOHOME_NAME               "org.mokosuite.home"
+#define MOKOHOME_SETTINGS_PATH      "/org/mokosuite/Home/Settings"
+
 // default log domain
 int _log_dom = -1;
+
+RemoteSettingsDatabase* home_settings = NULL;
 
 static void _close(void* data, Evas_Object* obj, void* event_info)
 {
@@ -48,7 +55,7 @@ static void _close(void* data, Evas_Object* obj, void* event_info)
 
 int main(int argc, char* argv[])
 {
-    // TODO: initialize Intl
+    // TODO initialize Intl
     setlocale(LC_ALL, "");
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
@@ -60,13 +67,49 @@ int main(int argc, char* argv[])
 
     EINA_LOG_INFO("%s version %s", PACKAGE_NAME, VERSION);
     elm_init(argc, argv);
+    elm_need_efreet();
 
     /* other things */
     mokosuite_utils_init();
-    config_init(MOKOHOME_SYSCONFDIR "/" PACKAGE ".conf");
-    elm_need_efreet();
+
+    /* GLib mainloop integration */
+    if (!ecore_main_loop_glib_integrate()) {
+        EINA_LOG_ERR("Ecore/GLib integration failed!");
+        return EXIT_FAILURE;
+    }
 
     EINA_LOG_DBG("Loading data from %s", MOKOHOME_DATADIR);
+
+    GError *e = NULL;
+    DBusGProxy *driver_proxy;
+    guint request_ret;
+
+    DBusGConnection* system_bus = dbus_g_bus_get(DBUS_BUS_SYSTEM, &e);
+    if (e) {
+        g_error("Unable to connect to system bus: %s", e->message);
+        g_error_free(e);
+        return EXIT_FAILURE;
+    }
+
+    driver_proxy = dbus_g_proxy_new_for_name (system_bus,
+            DBUS_SERVICE_DBUS,
+            DBUS_PATH_DBUS,
+            DBUS_INTERFACE_DBUS);
+    if (!driver_proxy)
+        g_error("Unable to connect to DBus interface. Exiting.");
+
+    if (!org_freedesktop_DBus_request_name (driver_proxy,
+            MOKOHOME_NAME, 0, &request_ret, &e)) {
+        g_error("Unable to request name: %s. Exiting.", e->message);
+        g_error_free(e);
+        return EXIT_FAILURE;
+    }
+    g_object_unref(driver_proxy);
+
+    home_settings = remote_settings_database_new(system_bus,
+        MOKOHOME_SETTINGS_PATH,
+        MOKOHOME_SYSCONFDIR "/" PACKAGE ".db");
+
 
     Ecore_X_Window *roots = NULL;
     int num = 0;
