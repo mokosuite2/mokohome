@@ -25,7 +25,7 @@
 #include "launchers.h"
 
 #define APPS_PATH       "/usr/share/applications"
-#define COLUMNS         4       // 3
+#define COLUMNS         4
 
 #ifdef QVGA
 #define LAUNCHERS_PADDING0_HEIGHT     3

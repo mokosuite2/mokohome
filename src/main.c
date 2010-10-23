@@ -71,12 +71,7 @@ int main(int argc, char* argv[])
 
     /* other things */
     mokosuite_utils_init();
-
-    /* GLib mainloop integration */
-    if (!ecore_main_loop_glib_integrate()) {
-        EINA_LOG_ERR("Ecore/GLib integration failed!");
-        return EXIT_FAILURE;
-    }
+    mokosuite_utils_glib_init(TRUE);
 
     EINA_LOG_DBG("Loading data from %s", MOKOHOME_DATADIR);
 

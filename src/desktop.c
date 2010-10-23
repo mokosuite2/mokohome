@@ -53,7 +53,7 @@
 
 static int wx = 0;
 static int wy = 0;
-static GPtrArray* widgets[NUM_DESKTOPS];
+static Eina_List* widgets[NUM_DESKTOPS];
 static Evas_Object* desktops[NUM_DESKTOPS];
 static Evas_Object* desktop_scroller = NULL;
 
@@ -118,8 +118,11 @@ static void widget_released(void *data, Evas *e, Evas_Object *obj, void *event_i
 }
 #endif
 
-static void add_widget(int desktop_id, Evas_Object* wd)
+static void add_widget(int desktop_id, Evas_Object* wd, int cx, int cy)
 {
+    if (cx >= 0) wx = cx;
+    if (cy >= 0) wy = cy;
+
     elm_table_pack(desktops[desktop_id], wd, 1 + wx, 1 + (wy * 2), 1, 1);
     evas_object_data_set(wd, "desktop_id", (void*) desktop_id);
 
@@ -129,7 +132,7 @@ static void add_widget(int desktop_id, Evas_Object* wd)
         wy++;
     }
 
-    g_ptr_array_add(widgets[desktop_id], wd);
+    widgets[desktop_id] = eina_list_append(widgets[desktop_id], wd);
 }
 
 static void add_custom_widget(Evas_Object* win, int desktop_id, const char* icon, const char* name, Evas_Object* scroller)
@@ -187,10 +190,10 @@ static void add_custom_widget(Evas_Object* win, int desktop_id, const char* icon
     evas_object_show(bt);
     evas_object_show(wd);
 
-    add_widget(desktop_id, wd);
+    add_widget(desktop_id, wd, -1, -1);
 }
 
-static Evas_Object* add_launcher_widget(Evas_Object* parent, int desktop_id, const char* desktop_file)
+static Evas_Object* add_launcher_widget(Evas_Object* parent, int desktop_id, const char* desktop_file, int cx, int cy)
 {
     Efreet_Desktop* d = efreet_desktop_get(desktop_file);
     Evas_Object* wd = NULL;
@@ -198,7 +201,7 @@ static Evas_Object* add_launcher_widget(Evas_Object* parent, int desktop_id, con
     if (d) {
         wd = widget_launcher_new(parent, d);
         if (wd)
-            add_widget(desktop_id, wd);
+            add_widget(desktop_id, wd, cx, cy);
 
         efreet_desktop_free(d);
     }
@@ -208,11 +211,12 @@ static Evas_Object* add_launcher_widget(Evas_Object* parent, int desktop_id, con
 
 void drag_start(int desktop_id)
 {
-    int i;
     drag_status = desktop_id;
 
-    for (i = 0; i < widgets[desktop_id]->len; i++)
-        edje_object_signal_emit(g_ptr_array_index(widgets[desktop_id], i), "drag_start", "widget");
+    Eina_List* iter;
+    Evas_Object* data;
+    EINA_LIST_FOREACH(widgets[desktop_id], iter, data)
+        edje_object_signal_emit(data, "drag_start", "widget");
 
     elm_object_scroll_freeze_push(desktop_scroller);
 }
@@ -220,10 +224,11 @@ void drag_start(int desktop_id)
 void drag_end(void)
 {
     if (drag_status < 0) return;
-    int i;
 
-    for (i = 0; i < widgets[drag_status]->len; i++)
-        edje_object_signal_emit(g_ptr_array_index(widgets[drag_status], i), "drag_end", "widget");
+    Eina_List* iter;
+    Evas_Object* data;
+    EINA_LIST_FOREACH(widgets[drag_status], iter, data)
+        edje_object_signal_emit(data, "drag_end", "widget");
 
     elm_object_scroll_freeze_pop(desktop_scroller);
 
@@ -269,20 +274,39 @@ static Evas_Object* prepare_table(Evas_Object* win, int cols, int rows)
 
 static void load_launchers(int desktop_id, Evas_Object* win)
 {
-    char* entry;
-    char* key = g_strdup("launcher1");
-    int i = 1;
-    char* section = g_strdup_printf("home/%d", desktop_id + 1);
+    char* entry, *entry2;
+    int i = 1, cx, cy;
+    char* key = g_strdup_printf("home/%d/launcher1", desktop_id + 1);
 
     while ((entry = remote_settings_database_GetSetting(home_settings, key, NULL))) {
-        add_launcher_widget(win, desktop_id, entry);
+        g_free(key);
+        key = g_strdup_printf("home/%d/launcher%d/position", desktop_id + 1, i);
+
+        if ((entry2 = remote_settings_database_GetSetting(home_settings, key, NULL))) {
+            char** xy = g_strsplit(entry2, ",", 2);
+            if (xy && xy[0] != NULL) {
+                cx = atoi(xy[0]);
+                cy = atoi(xy[1]);
+            }
+            else {
+                cx = -1;
+                cy = -1;
+            }
+            g_strfreev(xy);
+            g_free(entry2);
+        }
+
+        else {
+            cx = -1;
+            cy = -1;
+        }
+
+        add_launcher_widget(win, desktop_id, entry, cx, cy);
 
         g_free(entry);
         g_free(key);
-        key = g_strdup_printf("launcher%d", ++i);
+        key = g_strdup_printf("home/%d/launcher%d", desktop_id + 1, ++i);
     }
-
-    g_free(section);
 }
 
 Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
@@ -300,9 +324,6 @@ Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
     // riempi la tabella con le icone
     tb = prepare_table(win, WIDGETS_COLUMNS, WIDGETS_ROWS);
     desktops[0] = tb;
-
-    // TODO funzione di distruzione
-    widgets[0] = g_ptr_array_new();
 
     // launcher da configurazione semplice
     load_launchers(0, win);
@@ -322,9 +343,6 @@ Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
     wy = 0;
     tb = prepare_table(win, WIDGETS_COLUMNS, WIDGETS_ROWS);
     desktops[1] = tb;
-
-    // TODO funzione di distruzione
-    widgets[1] = g_ptr_array_new();
 
     // launcher da configurazione semplice
     load_launchers(1, win);
