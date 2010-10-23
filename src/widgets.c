@@ -66,8 +66,8 @@ Evas_Object* widget_launcher_new(Evas_Object* parent, Efreet_Desktop* d)
     edje_object_part_swallow(wd, "widget", bt);
     evas_object_size_hint_min_set(wd, LAUNCHER_WIDTH, LAUNCHER_HEIGHT);
 
-    evas_object_event_callback_add(bt, EVAS_CALLBACK_MOUSE_DOWN, launcher_pressed, NULL);
-    evas_object_event_callback_add(bt, EVAS_CALLBACK_MOUSE_UP, launcher_released, g_strdup(d->exec));
+    evas_object_event_callback_add(wd, EVAS_CALLBACK_MOUSE_DOWN, launcher_pressed, NULL);
+    evas_object_event_callback_add(wd, EVAS_CALLBACK_MOUSE_UP, launcher_released, g_strdup(d->exec));
 
     evas_object_show(bt);
     evas_object_show(wd);

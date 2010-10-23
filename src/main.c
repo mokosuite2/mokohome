@@ -30,13 +30,6 @@
 #include "launchers.h"
 #include "desktop.h"
 
-// per fare una cosa piu' precisa...
-#ifdef QVGA
-#define BG_WIDTH        427
-#else
-#define BG_WIDTH        853
-#endif
-
 #define MOKOHOME_NAME               "org.mokosuite.home"
 #define MOKOHOME_SETTINGS_PATH      "/org/mokosuite/Home/Settings"
 
@@ -51,6 +44,19 @@ static void _close(void* data, Evas_Object* obj, void* event_info)
     edje_object_signal_emit((Evas_Object *) data, "collapse", "handle");
 
     drag_end();
+}
+
+void get_screen_size(int *w, int *h)
+{
+    Ecore_X_Window *roots = NULL;
+    int num = 0;
+
+    roots = ecore_x_window_root_list(&num);
+    if (roots && num > 0) {
+        ecore_x_window_geometry_get(roots[0], NULL, NULL, w, h);
+    }
+
+    g_free(roots);
 }
 
 int main(int argc, char* argv[])
@@ -160,7 +166,7 @@ int main(int argc, char* argv[])
 
     evas_object_size_hint_weight_set(bg, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(bg, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    evas_object_size_hint_min_set(bg, BG_WIDTH, h /* SCREEN_HEIGHT */);
+    evas_object_size_hint_min_set(bg, w * NUM_DESKTOPS, h);
     evas_object_show(bg);
 
     // setta lo sfondo come wallpaper dei widgets

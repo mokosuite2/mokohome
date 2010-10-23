@@ -4,6 +4,8 @@
 #include <Elementary.h>
 #include <glib.h>
 
+#define NUM_DESKTOPS        2
+
 extern int drag_status;
 
 void drag_start(int desktop_id);

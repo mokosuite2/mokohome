@@ -48,4 +48,6 @@ extern int _log_dom;
 
 extern RemoteSettingsDatabase* home_settings;
 
+void get_screen_size(int *w, int *h);
+
 #endif  /* __GLOBALS_H */
