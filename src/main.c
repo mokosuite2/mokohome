@@ -21,7 +21,7 @@
 #include <Ecore_X.h>
 #include <Elementary.h>
 #include <mokosuite/utils/utils.h>
-#include <mokosuite/utils/settingsdb.h>
+#include <mokosuite/utils/remote-config-service.h>
 #include <mokosuite/utils/dbus.h>
 #include <glib.h>
 #include <dbus/dbus-glib-bindings.h>
@@ -31,12 +31,15 @@
 #include "desktop.h"
 
 #define MOKOHOME_NAME               "org.mokosuite.home"
-#define MOKOHOME_SETTINGS_PATH      "/org/mokosuite/Home/Settings"
+#define MOKOHOME_CONFIG_PATH        MOKOSUITE_DBUS_PATH "/Home/Config"
+
+#define CONFIG_SECTION_DESKTOP      "desktop"
+#define CONFIG_WALLPAPER_IMAGE      "wallpaper"
 
 // default log domain
 int _log_dom = -1;
 
-RemoteSettingsDatabase* home_settings = NULL;
+RemoteConfigService* home_config = NULL;
 
 static void _close(void* data, Evas_Object* obj, void* event_info)
 {
@@ -87,9 +90,11 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
 
     // settings database
-    home_settings = remote_settings_database_new(session_bus,
-        MOKOHOME_SETTINGS_PATH,
-        MOKOHOME_SYSCONFDIR "/" PACKAGE ".db");
+    char* cfg_file = g_strdup_printf("%s/.config/mokosuite/%s.conf", g_get_home_dir(), PACKAGE);
+    home_config = remote_config_service_new(session_bus,
+        MOKOHOME_CONFIG_PATH,
+        cfg_file);
+    g_free(cfg_file);
 
 
     Ecore_X_Window *roots = NULL;
@@ -160,7 +165,9 @@ int main(int argc, char* argv[])
     evas_object_show(widgets);
 
     Evas_Object* bg = elm_bg_add(win);
-    char* bg_img = remote_settings_database_GetSetting(home_settings, "wallpaper", MOKOHOME_DATADIR "/wallpaper_mountain.jpg");
+    char* bg_img = NULL;
+    if (!remote_config_service_get_string(home_config, CONFIG_SECTION_DESKTOP, CONFIG_WALLPAPER_IMAGE, &bg_img))
+        bg_img = g_strdup(MOKOHOME_DATADIR "/wallpaper_mountain.jpg");
     elm_bg_file_set(bg, bg_img, NULL);
     g_free(bg_img);
 

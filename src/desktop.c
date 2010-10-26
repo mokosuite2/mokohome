@@ -226,15 +226,16 @@ static void load_launchers(int desktop_id, Evas_Object* win)
 {
     char* entry, *entry2;
     int i = 1, cx, cy;
-    char* key = g_strdup_printf("home/%d/launcher/1", desktop_id + 1);
+    char* section = g_strdup_printf("home/%d", desktop_id + 1);
+    char* key = g_strdup("launcher1");
 
-    while ((entry = remote_settings_database_GetSetting(home_settings, key, NULL))) {
+    while (remote_config_service_get_string(home_config, section, key, &entry)) {
         g_free(key);
 
         // custom position :)
         cx = cy = -1;
-        key = g_strdup_printf("home/%d/launcher/%d/position", desktop_id + 1, i);
-        if ((entry2 = remote_settings_database_GetSetting(home_settings, key, NULL))) {
+        key = g_strdup_printf("launcher%d.position", i);
+        if (remote_config_service_get_string(home_config, section, key, &entry2)) {
             char** xy = g_strsplit(entry2, ",", 2);
             if (xy && xy[0] != NULL) {
                 cx = atoi(xy[0]);
@@ -250,6 +251,8 @@ static void load_launchers(int desktop_id, Evas_Object* win)
         g_free(key);
         key = g_strdup_printf("home/%d/launcher/%d", desktop_id + 1, ++i);
     }
+
+    g_free(section);
 }
 
 Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)

@@ -29,7 +29,7 @@
 #include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <mokosuite/utils/settingsdb.h>
+#include <mokosuite/utils/remote-config-service.h>
 
 // default log domain
 #undef EINA_LOG_DOMAIN_DEFAULT
@@ -46,7 +46,7 @@ extern int _log_dom;
 #define MOKOHOME_DATADIR        DATADIR "/mokosuite/home"
 #define SCALE_FACTOR            2.0
 
-extern RemoteSettingsDatabase* home_settings;
+extern RemoteConfigService* home_config;
 
 void get_screen_size(int *w, int *h);
 
