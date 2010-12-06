@@ -249,7 +249,7 @@ static void load_launchers(int desktop_id, Evas_Object* win)
 
         g_free(entry);
         g_free(key);
-        key = g_strdup_printf("home/%d/launcher/%d", desktop_id + 1, ++i);
+        key = g_strdup_printf("launcher%d", desktop_id + 1, ++i);
     }
 
     g_free(section);
