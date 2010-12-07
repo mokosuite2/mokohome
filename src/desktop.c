@@ -38,13 +38,6 @@
 
 #define LAUNCHER_HEIGHT (65 * SCALE_FACTOR)
 
-// per fare una cosa piu' precisa...
-#ifdef QVGA
-#define LAUNCHER_WIDTH  58
-#else
-#define LAUNCHER_WIDTH  115
-#endif
-
 #define LONG_PRESS_TIME     750
 
 static Evas_Object* desktop_scroller = NULL;
