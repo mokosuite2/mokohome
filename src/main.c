@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
     //widgets_edje = elm_layout_edje_get(widgets);
 
     evas_object_size_hint_weight_set(widgets, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(widgets, 0.0, 0.0);
+    evas_object_size_hint_align_set(widgets, 0.5, 0.0);
 
     // questo barbatrucco e' necessario per far scorrere lo sfondo insieme ai widgets
     elm_scroller_content_set(bgsc, widgets);

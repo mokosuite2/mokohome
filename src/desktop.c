@@ -32,8 +32,8 @@
 #define WIDGETS_PADDING0_HEIGHT     3
 #define WIDGETS_PADDING0_WIDTH      3
 #else
-#define WIDGETS_PADDING0_HEIGHT     5
-#define WIDGETS_PADDING0_WIDTH      5
+#define WIDGETS_PADDING0_HEIGHT     2
+#define WIDGETS_PADDING0_WIDTH      2
 #endif
 
 #define LAUNCHER_HEIGHT (65 * SCALE_FACTOR)
@@ -92,6 +92,12 @@ static void add_widget(int desktop_id, Evas_Object* wd, int cx, int cy)
     evas_object_data_set(wd, "desktop_id", (void*) desktop_id);
 
     widgets[desktop_id][wx][wy] = wd;
+}
+
+static void fill_widget(Evas_Object* parent, int desktop_id, int cx, int cy)
+{
+    Evas_Object* wd = fill_launcher_new(parent);
+    add_widget(desktop_id, wd, cx, cy);
 }
 
 #if 0
@@ -209,10 +215,21 @@ static Evas_Object* prepare_table(Evas_Object* win, int cols, int rows)
     tb = elm_table_add(win);
     elm_table_homogenous_set(tb, TRUE);
     evas_object_size_hint_weight_set(tb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(tb, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_size_hint_align_set(tb, 0.0, EVAS_HINT_FILL);
     elm_table_padding_set(tb, WIDGETS_PADDING0_WIDTH, WIDGETS_PADDING0_HEIGHT);
 
     return tb;
+}
+
+static void fill_launchers(int desktop_id, Evas_Object* win)
+{
+    int i, j;
+    for (i = 0; i < WIDGETS_COLUMNS; i++)
+        for (j = 0; j < WIDGETS_ROWS; j++) {
+            EINA_LOG_DBG("widgets[%d][%d][%d]=%p", desktop_id, i, j, widgets[desktop_id][i][j]);
+            if (!widgets[desktop_id][i][j])
+                fill_widget(win, desktop_id, i, j);
+        }
 }
 
 static void load_launchers(int desktop_id, Evas_Object* win)
@@ -250,6 +267,9 @@ static void load_launchers(int desktop_id, Evas_Object* win)
 
 Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
 {
+    // memset widgets array
+    //memset(widgets, WIDGETS_COLUMNS * WIDGETS_ROWS, sizeof(Evas_Object*));
+
     Evas_Object *mb, *bx, *tb;
 
     bx = elm_box_add(win);
@@ -257,7 +277,7 @@ Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
     elm_box_horizontal_set(bx, TRUE);
 
     evas_object_size_hint_weight_set(bx, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_weight_set(bx, 0.0, 0.0);
+    evas_object_size_hint_weight_set(bx, EVAS_HINT_FILL, EVAS_HINT_FILL);
     evas_object_show(bx);
 
     // riempi la tabella con le icone
@@ -266,10 +286,11 @@ Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
 
     // launcher da configurazione semplice
     load_launchers(0, win);
+    fill_launchers(0, win);
 
     mb = elm_mapbuf_add(win);
     evas_object_size_hint_weight_set(mb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(mb, 0.0, 0.0);
+    evas_object_size_hint_align_set(mb, EVAS_HINT_FILL, 0.0);
 
     elm_mapbuf_content_set(mb, tb);
     evas_object_show(tb);
@@ -283,10 +304,11 @@ Evas_Object* make_widgets(Evas_Object* win, Evas_Object* scroller)
 
     // launcher da configurazione semplice
     load_launchers(1, win);
+    fill_launchers(1, win);
 
     mb = elm_mapbuf_add(win);
     evas_object_size_hint_weight_set(mb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(mb, 0.0, 0.0);
+    evas_object_size_hint_align_set(mb, EVAS_HINT_FILL, 0.0);
 
     elm_mapbuf_content_set(mb, tb);
     evas_object_show(tb);

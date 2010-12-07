@@ -74,3 +74,14 @@ Evas_Object* widget_launcher_new(Evas_Object* parent, Efreet_Desktop* d)
 
     return wd;
 }
+
+Evas_Object* fill_launcher_new(Evas_Object* parent)
+{
+    Evas_Object* f = evas_object_rectangle_add(evas_object_evas_get(parent));
+    evas_object_size_hint_min_set(f, LAUNCHER_WIDTH, LAUNCHER_HEIGHT);
+    evas_object_size_hint_min_set(f, LAUNCHER_WIDTH, LAUNCHER_HEIGHT);
+    evas_object_color_set(f, 0, 0, 0, 0);
+    evas_object_pass_events_set(f, TRUE);
+    evas_object_show(f);
+    return f;
+}
