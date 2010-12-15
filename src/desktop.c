@@ -27,6 +27,7 @@
 
 #define WIDGETS_COLUMNS     4
 #define WIDGETS_ROWS        4
+#define WIDGETS_ROWS_MAX    30
 
 #ifdef QVGA
 #define WIDGETS_PADDING0_HEIGHT     3
@@ -43,7 +44,7 @@
 static Evas_Object* desktop_scroller = NULL;
 static Evas_Object* desktops[NUM_DESKTOPS] = {};
 
-static Evas_Object* widgets[NUM_DESKTOPS][WIDGETS_COLUMNS][WIDGETS_ROWS] = {};
+static Evas_Object* widgets[NUM_DESKTOPS][WIDGETS_COLUMNS][WIDGETS_ROWS_MAX] = {};
 
 // current desktop in dragging mode (-1 dragging disabled)
 int drag_status = -1;
@@ -63,7 +64,7 @@ static void get_free_place(int desktop_id, int* x, int* y)
     int si = (x && *x >= 0) ? *x : 0;
     int sj = (y && *y >= 0) ? *y : 0;
 
-    for (j = sj; j < WIDGETS_ROWS; j++) {
+    for (j = sj; j < WIDGETS_ROWS_MAX; j++) {
         for (i = si; i < WIDGETS_COLUMNS; i++) {
             if (!widgets[desktop_id][i][j]) {
                 if (x) *x = i;
@@ -186,11 +187,11 @@ void drag_start(int desktop_id)
 
     int i, j;
     for (i = 0; i < WIDGETS_COLUMNS; i++)
-        for (j = 0; j < WIDGETS_ROWS; j++)
+        for (j = 0; j < WIDGETS_ROWS_MAX; j++)
             if (widgets[desktop_id][i][j])
                 edje_object_signal_emit(widgets[desktop_id][i][j], "drag_start", "widget");
 
-    elm_object_scroll_freeze_push(desktop_scroller);
+    //elm_object_scroll_freeze_push(desktop_scroller);
 }
 
 void drag_end(void)
@@ -199,11 +200,11 @@ void drag_end(void)
 
     int i, j;
     for (i = 0; i < WIDGETS_COLUMNS; i++)
-        for (j = 0; j < WIDGETS_ROWS; j++)
+        for (j = 0; j < WIDGETS_ROWS_MAX; j++)
             if (widgets[drag_status][i][j])
                 edje_object_signal_emit(widgets[drag_status][i][j], "drag_end", "widget");
 
-    elm_object_scroll_freeze_pop(desktop_scroller);
+    //elm_object_scroll_freeze_pop(desktop_scroller);
 
     drag_status = -1;
 }
