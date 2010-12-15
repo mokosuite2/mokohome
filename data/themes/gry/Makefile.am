@@ -15,4 +15,4 @@ clean-local:
 	rm -f $(files_DATA)
 
 gry.edj: theme.edc $(EDC_DEPS)
-	@edje_cc@ $< $@
+	@edje_cc@ -v $< $@

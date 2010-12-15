@@ -279,8 +279,14 @@ collections {
 
     styles {
         style { name: "textblock_launcher";
+            // original old-style
             //base: "font=Sans font_size=8 align=center color=#fff wrap=word";
-            base: "font=Sans:style=Bold font_size=12 align=center color=#fff wrap=word";
+            // no outline
+            //base: "font=Sans:style=Bold font_size=12 align=center color=#fff wrap=word";
+            // simple outline
+            //base: "font=Sans:style=Bold font_size=12 align=center color=#fff style=outline outline_color=#000 wrap=word";
+            // glow outline (the best IMHO :)
+            base: "font=Sans:style=Bold font_size=12 align=center color=#fff style=glow glow_color=#000 outline_color=#000 wrap=word";
             tag:  "br" "\n";
             tag:  "hilight" "+ color=#ffff";
             tag:  "b" "+ color=#ffff";
@@ -342,12 +348,12 @@ collections {
 
             part { name: "disclip";
                 type: RECT;
-                description { 
+                description {
                     state: "default" 0.0;
                     rel1.to: "bg";
                     rel2.to: "bg";
                 }
-                description { 
+                description {
                     state: "disabled" 0.0;
                     inherit: "default" 0.0;
                     color: 255 255 255 64;
@@ -404,12 +410,12 @@ collections {
                     x: 1 1 0;
                     y: 1 1 0;
                 }
-                description { 
+                description {
                     state: "default" 0.0;
                     color: 0 0 0 0;
                     visible: 0;
                 }
-                description { 
+                description {
                     state: "visible" 1.0;
                     inherit: "default" 0.0;
                     color: 0 0 0 100;

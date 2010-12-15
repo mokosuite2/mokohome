@@ -75,6 +75,27 @@ int main(int argc, char* argv[])
     eina_log_domain_level_set(PACKAGE, LOG_LEVEL);
 
     EINA_LOG_INFO("%s version %s", PACKAGE_NAME, VERSION);
+
+    bool basic_win = FALSE;
+
+    int c;
+    opterr = 0;
+    while ((c = getopt (argc, argv, "w")) != -1) {
+        switch (c) {
+            case 'w':
+                basic_win = TRUE;
+                break;
+
+            default:
+                if (isprint(optopt))
+                    EINA_LOG_ERR("Unknown option: `-%c'.", optopt);
+                else
+                    EINA_LOG_ERR("Unknown option: `-\\x%x'.", optopt);
+                return EXIT_FAILURE;
+        }
+        opterr = 0;
+    }
+
     elm_init(argc, argv);
     elm_need_efreet();
 
@@ -113,7 +134,7 @@ int main(int argc, char* argv[])
     elm_theme_extension_add(NULL, MOKOHOME_DATADIR "/theme.edj");
     elm_theme_overlay_add(NULL, "elm/scroller/base/desktop");
 
-    Evas_Object* win = elm_win_add(NULL, "mokohome", ELM_WIN_DESKTOP);
+    Evas_Object* win = elm_win_add(NULL, "mokohome", basic_win ? ELM_WIN_BASIC : ELM_WIN_DESKTOP);
     elm_win_title_set(win, "Home");
     elm_win_borderless_set(win, TRUE);
     //elm_win_layer_set(win, 90);    // home layer :)
