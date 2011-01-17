@@ -5,11 +5,11 @@
 #include "globals.h"
 
 #define LAUNCHER_ICON_THEME     "shr"
-#define LAUNCHER_ICON_SIZE      (38 * SCALE_FACTOR)
-#define LAUNCHER_HEIGHT         (70 * SCALE_FACTOR)
+#define LAUNCHER_ICON_SIZE      (30 * SCALE_FACTOR)
+#define LAUNCHER_HEIGHT         (65 * SCALE_FACTOR)
 
 #ifdef QVGA
-#define LAUNCHER_WIDTH          50
+#define LAUNCHER_WIDTH          55
 #else
 #define LAUNCHER_WIDTH          115
 #endif

@@ -1,11 +1,12 @@
-#define SCALE_FACTOR    2
+#define SCALE_FACTOR    1
 #define HANDLE_HEIGHT   (52*SCALE_FACTOR)
 #define HANDLE_OFFSET   (6*SCALE_FACTOR)
 #define SCREEN_WIDTH    (240*SCALE_FACTOR)
-#define UPPER_SPACE     (35*SCALE_FACTOR)
+#define UPPER_SPACE     (25*SCALE_FACTOR)
 
 #define COLOR_DARK_GRAY 79 79 79 255
 #define COLOR_ORANGE_SOLID 248 169 0 255
+#define COLOR_BLACK_TRANSLUCENT 0 0 0 150
 
 collections {
 
@@ -277,22 +278,24 @@ collections {
 
     }   // group:home
 
+    /*
     styles {
         style { name: "textblock_launcher";
             // original old-style
-            //base: "font=Sans font_size=8 align=center color=#fff wrap=word";
+            //base: "font=Droid font_size=8 align=center color=#fff wrap=word";
             // no outline
-            //base: "font=Sans:style=Bold font_size=12 align=center color=#fff wrap=word";
+            //base: "font=Droid:style=Bold font_size=12 align=center color=#fff wrap=word";
             // simple outline
-            //base: "font=Sans:style=Bold font_size=12 align=center color=#fff style=outline outline_color=#000 wrap=word";
+            //base: "font=Droid:style=Bold font_size=12 align=center color=#fff style=outline outline_color=#000 wrap=word";
             // glow outline (the best IMHO :)
-            base: "font=Sans:style=Bold font_size=12 align=center color=#fff style=glow glow_color=#000 outline_color=#000 wrap=word";
+            base: "font=Droid font_size=12 align=center color=#fff style=glow glow_color=#000 outline_color=#000 wrap=none";
             tag:  "br" "\n";
             tag:  "hilight" "+ color=#ffff";
             tag:  "b" "+ color=#ffff";
             tag:  "tab" "\t";
         }
     }
+    */
 
     group { name: "launcher";
 
@@ -329,20 +332,45 @@ collections {
                 }
             }
 
-            part { name: "title";
+            part { name: "titlebg";
                 clip_to: "disclip";
-                type: TEXTBLOCK;
+                type: RECT;
                 mouse_events: 0;
                 repeat_events: 1;
                 description {
                     state: "default" 0.0;
-                    rel1 { relative: 0.05 0.7; }
-                    rel2 { relative: 0.95 0.95; }
-                    align: 0.5 0;
-                    text {
-                        style: "textblock_launcher";
-                        min: 0 1;
+                    rel1.to: "title";
+                    rel1.offset: -2 0;
+                    rel2.to: "title";
+                    rel2.offset: 2 -2;
+                    color: COLOR_BLACK_TRANSLUCENT;
+                }
+            }
+
+            part { name: "title";
+                clip_to: "disclip";
+                type: TEXT;
+                mouse_events: 0;
+                repeat_events: 1;
+                effect: OUTLINE;
+                description {
+                    state: "default" 0.0;
+                    rel1 {
+                        relative: 0.05 0.7;
+                        offset: 1 0;
                     }
+                    rel2 {
+                        relative: 0.95 0.95;
+                        offset: -1 0;
+                    }
+                    text {
+                        align: 0.5 0.5;
+                        min: 0 0;
+                        elipsis: 0.0;
+                        font: "Droid";
+                        size: (11*SCALE_FACTOR);
+                    }
+                    color: 255 255 255 255;
                 }
             }
 
