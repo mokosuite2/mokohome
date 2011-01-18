@@ -283,13 +283,13 @@ collections {
     styles {
         style { name: "textblock_launcher";
             // original old-style
-            //base: "font=Droid font_size=8 align=center color=#fff wrap=word";
+            //base: "font=DroidSans font_size=8 align=center color=#fff wrap=word";
             // no outline
-            //base: "font=Droid:style=Bold font_size=12 align=center color=#fff wrap=word";
+            //base: "font=DroidSans:style=Bold font_size=12 align=center color=#fff wrap=word";
             // simple outline
-            //base: "font=Droid:style=Bold font_size=12 align=center color=#fff style=outline outline_color=#000 wrap=word";
+            //base: "font=DroidSans:style=Bold font_size=12 align=center color=#fff style=outline outline_color=#000 wrap=word";
             // glow outline (the best IMHO :)
-            base: "font=Droid font_size=12 align=center color=#fff style=glow glow_color=#000 outline_color=#000 wrap=none";
+            base: "font=DroidSans font_size=12 align=center color=#fff style=glow glow_color=#000 outline_color=#000 wrap=none";
             tag:  "br" "\n";
             tag:  "hilight" "+ color=#ffff";
             tag:  "b" "+ color=#ffff";
@@ -365,10 +365,11 @@ collections {
                         offset: -1 0;
                     }
                     text {
-                        align: 0.5 0.5;
+                        align: 0.0 0.5;
                         min: 0 0;
-                        elipsis: 0.0;
-                        font: "Droid";
+                        max: 1 0;
+                        //elipsis: 0.0;
+                        font: "DroidSans";
                         size: (11*SCALE_FACTOR);
                     }
                     color: 255 255 255 255;
