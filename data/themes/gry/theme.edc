@@ -1,4 +1,5 @@
 #define SCALE_FACTOR    1
+#define HANDLE_DISTANCE 25
 #define HANDLE_HEIGHT   (52*SCALE_FACTOR)
 #define HANDLE_OFFSET   (6*SCALE_FACTOR)
 #define SCREEN_WIDTH    (240*SCALE_FACTOR)
@@ -99,7 +100,7 @@ collections {
                     min: SCREEN_WIDTH HANDLE_HEIGHT;
                     rel1 {
                         relative: 0.0 0.0;
-                        offset: 0 (35*SCALE_FACTOR);
+                        offset: 0 (HANDLE_DISTANCE*SCALE_FACTOR);
                     }
                     rel2 {
                         relative: 1.0 1.0;
