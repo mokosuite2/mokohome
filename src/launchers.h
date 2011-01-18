@@ -11,7 +11,7 @@
 #ifdef QVGA
 #define LAUNCHER_WIDTH          55
 #else
-#define LAUNCHER_WIDTH          115
+#define LAUNCHER_WIDTH          110
 #endif
 
 

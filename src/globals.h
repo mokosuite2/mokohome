@@ -44,8 +44,8 @@ extern int _log_dom;
 
 #define MOKOHOME_SYSCONFDIR     SYSCONFDIR "/mokosuite"
 #define MOKOHOME_DATADIR        DATADIR "/mokosuite/home"
-#define SCALE_FACTOR            1.0
-#define QVGA                    1
+#define SCALE_FACTOR            2.0
+//#define QVGA                    1
 
 extern RemoteConfigService* home_config;
 
