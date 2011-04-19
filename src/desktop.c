@@ -19,6 +19,7 @@
  */
 
 #include <Elementary.h>
+#include <Efreet.h>
 #include <glib.h>
 
 #include "globals.h"

@@ -2,6 +2,7 @@
 #define __LAUNCHERS_H
 
 #include <Elementary.h>
+#include <Efreet.h>
 #include "globals.h"
 
 #define LAUNCHER_ICON_THEME     "shr"
