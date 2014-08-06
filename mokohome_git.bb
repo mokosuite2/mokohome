@@ -1,5 +1,5 @@
 DESCRIPTION = "Desktop environment and phone stack GUI for SHR - desktop and home screen"
-HOMEPAGE = "http://gitorious.org/mokosuite2"
+HOMEPAGE = "https://gitorious.org/mokosuite2"
 AUTHOR = "Daniele Ricci"
 LICENSE = "GPLv3"
 DEPENDS = "libmokosuite edje-native"
